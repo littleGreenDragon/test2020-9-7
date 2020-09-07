@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <properties resource="configue.properties"/>
+    <settings>
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
+    </settings>
+    <typeAliases>
+        <!-- type是自定义类型的全限定名称,alias是别名-->
+        <!--<typeAlias type="com.bjsxt.empmgr.entity.Employee" alias="Employee"/>-->
+        <!-- 第二种方法:<package> name是报名,这个包中的所有类,类名就是别名(类名不区分大小写)-->
+        <package name="com.bjsxt.empmgr.entity"/>
+    </typeAliases>
+    <plugins>
+        <plugin interceptor="com.github.pagehelper.PageInterceptor" />
+    </plugins>
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <!--
+            POOLED:mybatis会创建PooledDataSource类
+            UPOOLED:mybatis会创建UnPooledDataSource类,不使用连接池,县创建连接,执行sql,再关闭
+            JNDI:java命名和目录服务(windows注册表)
+            -->
+            <dataSource type="POOLED">
+                <property name="driver" value="${mysql.driver}"/>
+                <property name="url" value="${mysql.url}"/>
+                <property name="username" value="${mysql.username}"/>
+                <property name="password" value="${mysql.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <mappers>
+        <!--可以使用package,
+        但是使用package的话必须满足mapper文件和接口文件名称一样,
+        区分大小写,
+        mapper文件和dao接口需要在同一个目录下-->
+        <mapper resource="com\bjsxt\empmgr\dao\impl\EmployeeDao.xml"/>
+    </mappers>
+</configuration>

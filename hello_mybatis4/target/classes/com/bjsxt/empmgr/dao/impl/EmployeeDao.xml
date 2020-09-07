@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjsxt.empmgr.dao.EmployeeDao">
+    <select id="findAll" resultType="com.bjsxt.empmgr.entity.Employee">
+        select * from employee
+    </select>
+    <select id="findById"  resultType="com.bjsxt.empmgr.entity.Employee">
+        select * from employee where id = #{id}
+    </select>
+    <select id="findByMulPAram" resultType="com.bjsxt.empmgr.entity.Employee">
+         select * from employee where name = #{myName} and age = #{myAge}
+    </select>
+    <select id="count" resultType="int">
+         select count(*) from employee
+    </select>
+
+    <!--列名是map的key,列值是map的value
+    注意:返回map时,最多只能返回一行记录,多于一行是错误的-->
+    <select id="findMapById" resultType="java.util.Map">
+        select * from employee where id = #{id}
+    </select>
+    <!--
+    使用resultMap
+    1)先定义resultMap
+    2)在select标签,使用resultMap来引用1定义的
+    定义resultMap
+    id:自定义名称,表示定义的这个resultMap
+    type:java类型的全限定名称
+    -->
+    <resultMap id="EmployeeMap" type="com.bjsxt.empmgr.entity.Employee">
+        <!--列名和java属性的关系-->
+        <!--主键列:使用id标签-->
+        <!--column:列名-->
+        <!--property:java类型的属性名-->
+        <id column="id" property="id"/>
+        <!--非主键列:使用result标签-->
+        <result column="name" property="name"/>
+        <result column="sex" property="sex"/>
+        <result column="age" property="age"/>
+        <result column="email" property="email"/>
+        <result column="phone" property="phone"/>
+        <result column="address" property="address"/>
+        <result column="hiredate" property="hiredate"/>
+        <result column="job" property="job"/>
+        <result column="salary" property="salary"/>
+    </resultMap>
+    <select id="findAllWithResultMap" resultMap="EmployeeMap">
+        select * from employee
+    </select>
+    <!--resultType的默认原则:同名的列值赋值给同名的属性-->
+<!--    <select id="findAllWithResultMap" resultType="com.bjsxt.empmgr.entity.Employee">-->
+<!--        select id as id, name as name,age as age, sex as sex,email as email,phone as phone ,address as address, hiredate as hiredate,job as job ,salary as salary from employee-->
+<!--    </select>-->
+    <!--模糊查询,第一种-->
+    <select id="findLikeBy" resultType="com.bjsxt.empmgr.entity.Employee">
+       select name from employee where name like #{name}
+    </select>
+    <!--模糊查询,第二种,在mapper文件中拼接Like的内容-->
+    <select id="findLikeBy2" resultType="com.bjsxt.empmgr.entity.Employee">
+       select name from employee where name like "%" #{name} "%"
+    </select>
+    <insert id="save" >
+        insert into employee values (#{id},#{name},#{sex},#{age},#{email},#{phone},#{address},#{hiredate},#{job},#{salary});
+    </insert>
+</mapper>

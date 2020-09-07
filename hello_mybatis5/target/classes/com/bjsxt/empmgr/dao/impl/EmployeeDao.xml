@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjsxt.empmgr.dao.EmployeeDao">
+    <!--
+    <if test="使用参数java对象的属性值作为判断条件,语法 属性=xxx值"></if>
+    -->
+    <sql id="select">
+        select * from employee
+    </sql>
+    <sql id="update">
+        update employee
+    </sql>
+    <select id="findByIf" resultType="com.bjsxt.empmgr.entity.Employee">
+        <include refid="select"/>
+        where id > 0
+        <if test="name != null and name !=''">
+            and name = #{name}
+        </if>
+        <if test="age = 20">
+            and age = #{age}
+        </if>
+    </select>
+    <select id="findByWhere" resultType="Employee">
+        <include refid="select"/>
+        <where>
+            <if test="name != null and name !=''">
+                or name = #{name}
+            </if>
+            <if test="age = 20">
+                and age = #{age}
+            </if>
+        </where>
+    </select>
+        <!-- collection表示方法参数的类型,如果是数组使用array,如果是List集合用list-->
+        <!-- item是自定义的,表示数组和集合成员的变量-->
+        <!-- open是循环开始的字符-->
+        <!-- close是循环结束时的字符-->
+        <!-- separator是集合成员之间的分隔符-->
+    <select id="findByFor" resultType="Employee">
+        <include refid="select"/>
+         where id in
+        <foreach collection="list" item="j" open="(" close=")" separator=",">
+            #{j}
+        </foreach>
+    </select>
+    <select id="findByForPlus" resultType="Employee">
+        <include refid="select"/>
+         where id in (
+        <foreach collection="list" item="i"  separator=",">
+            #{i.id}
+        </foreach>
+        )
+    </select>
+    <select id="findByLimit" resultType="Employee">
+        <include refid="select"/>
+    </select>
+</mapper>
